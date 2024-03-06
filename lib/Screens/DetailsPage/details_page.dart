@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:carrentalco/Data/firebase_functions.dart';
 import 'package:carrentalco/Models/Car.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -263,7 +264,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                     ),
                                     child: Align(
                                       child: GestureDetector(
-                                        onTap: (){
+                                        onTap: () {
                                           openMapWithQuery(widget.car.location);
                                         },
                                         child: Text(
@@ -294,8 +295,6 @@ class _DetailsPageState extends State<DetailsPage> {
         ),
       ),
     );
-
-
   }
 
   Future<void> openMapWithQuery(String query) async {
@@ -401,42 +400,173 @@ class _DetailsPageState extends State<DetailsPage> {
       ),
     );
   }
-}
 
-Align buildSelectButton(Size size) {
-  return Align(
-    alignment: Alignment.bottomCenter,
-    child: Padding(
-      padding: EdgeInsets.only(
-        bottom: size.height * 0.01,
-      ),
-      child: SizedBox(
-        height: size.height * 0.07,
-        width: size.width,
-        child: InkWell(
-          onTap: () {
-            //TODO: add select action
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: const Color(0xff3b22a1),
-            ),
-            child: Align(
-              child: Text(
-                'Select',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.lato(
-                  fontSize: size.height * 0.025,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+  void _showDateRangePicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return selectDateRange(
+          carId: widget.car.id,
+          ownerId: widget.car.owner,
+        );
+      },
+    );
+  }
+
+  Align buildSelectButton(Size size) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: size.height * 0.01,
+        ),
+        child: SizedBox(
+          height: size.height * 0.07,
+          width: size.width,
+          child: InkWell(
+            onTap: () {
+              _showDateRangePicker(context);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: const Color(0xff3b22a1),
+              ),
+              child: Align(
+                child: Text(
+                  'Select',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.lato(
+                    fontSize: size.height * 0.025,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
+}
 
+class selectDateRange extends StatefulWidget {
+  final String carId;
+  final String ownerId;
+  const selectDateRange(
+      {super.key, required this.carId, required this.ownerId});
+
+  @override
+  State<selectDateRange> createState() => _selectDateRangeState();
+}
+
+class _selectDateRangeState extends State<selectDateRange> {
+  DateTime? startDate;
+  DateTime? endDate;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 300,
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Select Date Range',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 20),
+          // Date range picker
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Start Date:'),
+              TextButton(
+                onPressed: () async {
+                  final selectedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime(2100),
+                  );
+                  if (selectedDate != null) {
+                    setState(() {
+                      startDate = selectedDate;
+                    });
+                  }
+                },
+                child: Text(
+                  startDate != null
+                      ? '${startDate!.day}/${startDate!.month}/${startDate!.year}'
+                      : 'Select',
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('End Date:'),
+              TextButton(
+                onPressed: () async {
+                  final selectedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime(2100),
+                  );
+                  if (selectedDate != null) {
+                    setState(() {
+                      endDate = selectedDate;
+                    });
+                  }
+                },
+                child: Text(
+                  endDate != null
+                      ? '${endDate!.day}/${endDate!.month}/${endDate!.year}'
+                      : 'Select',
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                flex: 1,
+                child: TextButton(
+                  onPressed: () {
+                    Get.back(); // Close modal
+                  },
+                  child: Text('Cancel'),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    // Perform action with selected dates
+                    if (startDate != null && endDate != null) {
+                      await FirebaseFunctions.uploadBookingData(
+                          startDate: startDate!,
+                          endDate: endDate!,
+                          carId: widget.carId,
+                          ownerId: widget.ownerId);
+                    }
+                    Navigator.pop(context); // Close modal
+                  },
+                  child: Text('Confirm'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }

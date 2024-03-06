@@ -14,6 +14,7 @@ class Car {
   final String rating;
   final String place;
   final String location;
+  final String owner;
 
   Car({
     required this.place,
@@ -29,12 +30,14 @@ class Car {
     required this.price,
     required this.isRotated,
     required this.rating,
+    required this.owner
   });
 
   factory Car.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Car(
       id: doc.id,
+      owner: data['owner'] ?? '',
       companyId: data['companyId'] ?? '',
       name: data['name'] ?? '',
       carClass: data['class'] ?? '',

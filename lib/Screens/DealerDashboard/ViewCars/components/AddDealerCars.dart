@@ -22,7 +22,8 @@ class _AddDealerCarsState extends State<AddDealerCars> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _powerController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
-  // TextEditingController _ratingController = TextEditingController();
+  TextEditingController _locationController = TextEditingController();
+  TextEditingController _placeController = TextEditingController();
   TextEditingController _yearController = TextEditingController();
   File? _image;
 
@@ -290,27 +291,48 @@ class _AddDealerCarsState extends State<AddDealerCars> {
                   ),
                 ],
               ),
-              // SizedBox(height: 10),
-              // Row(
-              //   children: [
-              //     Container(
-              //       width: size.width * 0.2,
-              //       child: Text(
-              //         'Rating:',
-              //         style: TextStyle(fontWeight: FontWeight.bold),
-              //       ),
-              //     ),
-              //     SizedBox(width: 40,),
-              //     Expanded(
-              //       child: TextFormField(
-              //         controller: _ratingController,
-              //         decoration: InputDecoration(
-              //           hintText: 'Enter rating',
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Container(
+                    width: size.width * 0.2,
+                    child: Text(
+                      'Rating:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(width: 40,),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _placeController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter rating',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Container(
+                    width: size.width * 0.2,
+                    child: Text(
+                      'Rating:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(width: 40,),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _locationController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter rating',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               SizedBox(height: 10),
               Row(
                 children: [
@@ -387,7 +409,8 @@ class _AddDealerCarsState extends State<AddDealerCars> {
     print('People: $_selectedPeople');
     print('Power: ${_powerController.text}');
     print('Price: ${_priceController.text}');
-    // print('Rating: ${_ratingController.text}');
+    print('Rating: ${_locationController.text}');
+    print('Rating: ${_placeController.text}');
     print('Year: ${_yearController.text}');
     print('Brand: $_selectedBrand');
 
@@ -401,6 +424,8 @@ class _AddDealerCarsState extends State<AddDealerCars> {
       price: int.tryParse(_priceController.text)!,
       year: int.tryParse(_yearController.text)!,
       image: _image!,
+      place: _placeController.text,
+      location: _locationController.text
     );
 
     Get.back();

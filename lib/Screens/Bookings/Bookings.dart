@@ -12,6 +12,27 @@ class Bookings extends StatefulWidget {
 }
 
 class _BookingsState extends State<Bookings> {
+  String _formatDate(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+  }
+
+  Future<DocumentSnapshot> getCarDetails(String carId) async {
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      DocumentSnapshot carSnapshot =
+          await firestore.collection('cars').doc(carId).get();
+
+      // Return the car document snapshot
+      return carSnapshot;
+    } catch (e) {
+      // Handle any errors that occur during the process
+      print('Error getting car details: $e');
+      throw e; // Rethrow the error to handle it in the calling function
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -26,35 +47,9 @@ class _BookingsState extends State<Bookings> {
         automaticallyImplyLeading: false,
         titleSpacing: 0,
         leadingWidth: size.width * 0.15,
-        title: const Text("CAR RENTALCO"),
+        title: const Text("Car RentalCo"),
         centerTitle: true,
-        actions: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(
-              right: size.width * 0.05,
-            ),
-            child: SizedBox(
-              height: size.width * 0.1,
-              width: size.width * 0.1,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: themeData.backgroundColor.withOpacity(0.03),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                ),
-                child: Icon(
-                  UniconsLine.search,
-                  color: themeData.secondaryHeaderColor,
-                  size: size.height * 0.025,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
-      extendBody: true,
-      extendBodyBehindAppBar: true,
       bottomNavigationBar: buildBottomNavBar(3, size, themeData),
       backgroundColor: themeData.backgroundColor,
       body: SingleChildScrollView(
@@ -89,17 +84,82 @@ class _BookingsState extends State<Bookings> {
                   return Text('No bookings found.');
                 }
 
-                // Display booking data
                 return Column(
                   children: snapshot.data!.docs.map((document) {
                     Map<String, dynamic> data =
                         document.data() as Map<String, dynamic>;
-                    return ListTile(
-                      title: Text(data[
-                          'bookingDetails']), // Change field as per your document structure
-                      subtitle: Text(data[
-                          'bookingDate']), // Change field as per your document structure
-                      // Add more fields as needed
+                    return FutureBuilder<DocumentSnapshot>(
+                      future: getCarDetails(data['carId']),
+                      builder: (context, carSnapshot) {
+                        if (carSnapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        }
+
+                        if (carSnapshot.hasError) {
+                          return Text('Error: ${carSnapshot.error}');
+                        }
+
+                        if (!carSnapshot.hasData) {
+                          return Text('Car details not found.');
+                        }
+
+                        Map<String, dynamic> carData =
+                            carSnapshot.data!.data() as Map<String, dynamic>;
+
+                        return ListTile(
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 10.0),
+                          title: Text(
+                            'Car: ${carData['name']}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 5.0),
+                              Text(
+                                'Price: \$${carData['price']} per day',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                              SizedBox(height: 5.0),
+                              Text(
+                                'Booking Time: ${_formatDate(data['time'])}',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                              SizedBox(height: 5.0),
+                              Text(
+                                'Start Date: ${_formatDate(data['startDate'])}',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                              SizedBox(height: 5.0),
+                              Text(
+                                'End Date: ${_formatDate(data['endDate'])}',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                          trailing: data['status'] == "waiting"
+                              ? Icon(UniconsLine.clock, color: Colors.amber,)
+                              : data['status'] == "approved"
+                                  ? Icon(UniconsLine.thumbs_up, color: Colors.green,)
+                                  : Icon(UniconsLine.thumbs_down, color: Colors.red,),
+                          // onTap: () {
+                          //   // Add onTap functionality if needed
+                          // },
+                        );
+                      },
                     );
                   }).toList(),
                 );

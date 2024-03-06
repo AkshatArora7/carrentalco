@@ -132,7 +132,9 @@ class FirebaseFunctions {
   }
 
   static Future<void> uploadProfileImageAndUpdateData(
-      {required File imageFile, required String newName, required String newAddress}) async {
+      {required File imageFile,
+      required String newName,
+      required String newAddress}) async {
     try {
       String userId = FirebaseAuth.instance.currentUser!.uid;
       String imageURL = await _uploadImageToStorage(imageFile, userId);
@@ -177,17 +179,18 @@ class FirebaseFunctions {
     }
   }
 
-  static Future<void> uploadCarData({
-    required String name,
-    required String bag,
-    required String classType,
-    required String people,
-    required int power,
-    required int price,
-    required int year,
-    required String brand,
-    required File image,
-  }) async {
+  static Future<void> uploadCarData(
+      {required String name,
+      required String bag,
+      required String classType,
+      required String people,
+      required int power,
+      required int price,
+      required int year,
+      required String brand,
+      required File image,
+      required String place,
+      required String location}) async {
     try {
       // Get current user ID
       String? userId = FirebaseAuth.instance.currentUser?.uid;
@@ -214,6 +217,8 @@ class FirebaseFunctions {
           'year': year,
           'brand': brand,
           'image': imageUrl,
+          'place': place,
+          'location': location
         });
         // Car data saved successfully
         print('Car data uploaded successfully');
@@ -224,6 +229,48 @@ class FirebaseFunctions {
     } catch (error) {
       // Error occurred while uploading car data
       print('Error uploading car data: $error');
+    }
+  }
+
+  static Future<void> uploadBookingData({
+    required DateTime startDate,
+    required DateTime endDate,
+    required String carId,
+    required String ownerId
+  }) async {
+    try {
+      // Get a reference to the Firestore database
+      final firestore = FirebaseFirestore.instance;
+      String userId = FirebaseAuth.instance.currentUser!.uid;
+
+      // Add a new document with a generated ID to the "bookings" collection
+      await firestore.collection('bookings').add({
+        'startDate': startDate,
+        'endDate': endDate,
+        "carId": carId,
+        'userId': userId,
+        'time': DateTime.now(),
+        'ownerId': ownerId,
+        'status': 'waiting'
+      });
+
+      print('Booking data uploaded successfully!');
+    } catch (e) {
+      print('Error uploading booking data: $e');
+      // Handle error as needed
+    }
+  }
+
+  static Stream<QuerySnapshot<Object?>> getDealerBookings() {
+    try {
+      String ownerId = FirebaseAuth.instance.currentUser!.uid;
+      return FirebaseFirestore.instance
+          .collection('bookings')
+          .where('ownerId', isEqualTo: ownerId)
+          .snapshots();
+    } catch (e) {
+      print('Error getting dealer bookings: $e');
+      throw e;
     }
   }
 }

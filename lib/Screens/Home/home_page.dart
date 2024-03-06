@@ -27,39 +27,32 @@ class _HomePageState extends State<HomePage> {
           elevation: 0.0,
           shadowColor: Colors.transparent,
           backgroundColor: themeData.backgroundColor,
-          leading: Padding(
-            padding: EdgeInsets.only(
-              left: size.width * 0.05,
-            ),
-            child: SizedBox(
-              height: size.width * 0.1,
-              width: size.width * 0.1,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: themeData.backgroundColor.withOpacity(0.03),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                ),
-                child: Icon(
-                  UniconsLine.bars,
-                  color: themeData.secondaryHeaderColor,
-                  size: size.height * 0.025,
-                ),
-              ),
-            ),
-          ),
+          // leading: Padding(
+          //   padding: EdgeInsets.only(
+          //     left: size.width * 0.05,
+          //   ),
+          //   child: SizedBox(
+          //     height: size.width * 0.1,
+          //     width: size.width * 0.1,
+          //     child: Container(
+          //       decoration: BoxDecoration(
+          //         color: themeData.backgroundColor.withOpacity(0.03),
+          //         borderRadius: const BorderRadius.all(
+          //           Radius.circular(10),
+          //         ),
+          //       ),
+          //       child: Icon(
+          //         UniconsLine.bars,
+          //         color: themeData.secondaryHeaderColor,
+          //         size: size.height * 0.025,
+          //       ),
+          //     ),
+          //   ),
+          // ),
           automaticallyImplyLeading: false,
           titleSpacing: 0,
           leadingWidth: size.width * 0.15,
-          title: const Text("CAR RENALCO"),
-          // title: Image.asset(
-          //   themeData.brightness == Brightness.dark
-          //       ? 'assets/icons/logoLight.png'
-          //       : 'assets/icons/logoDark.png', //logo
-          //   height: size.height * 0.06,
-          //   width: size.width * 0.35,
-          // ),
+          title: const Text("CAR RENTALCO"),
           centerTitle: true,
           actions: <Widget>[
             Padding(

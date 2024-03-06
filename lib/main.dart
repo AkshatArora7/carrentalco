@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       title: 'CAR RENTALCO',
       theme: lightModeTheme,
       darkTheme: darkModeTheme,
-      routes: routes,
+      getPages: routes,
       initialRoute: '/',
       onUnknownRoute: (settings) {
         return MaterialPageRoute(

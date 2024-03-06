@@ -1,5 +1,3 @@
-import 'package:carrentalco/Screens/Home/home_page.dart';
-import 'package:carrentalco/Screens/Profile/profile_screen.dart';
 import 'package:carrentalco/components/bottom_nav_item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,20 +19,22 @@ Widget buildBottomNavBar(int currIndex, Size size, ThemeData themeData) {
     onTap: (value) {
       if (value != currIndex) {
         if (value == 1) {
-          Get.off(const HomePage());
+          Get.offNamed('/home');
         }else if (value == 2) {
-          Get.off(const ProfileScreen());
+          Get.offNamed('/profile');
+        }else if (value == 3) {
+          Get.offNamed('/bookings');
         }
       }
     },
     items: [
       buildBottomNavItem(
-        UniconsLine.bell,
+        UniconsLine.envelope,
         themeData,
         size,
       ),
       buildBottomNavItem(
-        UniconsLine.map_marker,
+        UniconsLine.car,
         themeData,
         size,
       ),
@@ -44,7 +44,7 @@ Widget buildBottomNavBar(int currIndex, Size size, ThemeData themeData) {
         size,
       ),
       buildBottomNavItem(
-        UniconsLine.apps,
+        UniconsLine.notes,
         themeData,
         size,
       ),

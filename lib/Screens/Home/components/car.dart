@@ -1,13 +1,14 @@
 import 'dart:math';
 
 import 'package:carrentalco/Data/cars.dart';
+import 'package:carrentalco/Models/Car.dart';
 import 'package:carrentalco/Screens/DetailsPage/details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unicons/unicons.dart';
 
-Padding buildCar(int i, Size size, ThemeData themeData) {
+Padding buildCar({required Car carData, required Size size, required ThemeData themeData}) {
   return Padding(
     padding: EdgeInsets.only(
       right: size.width * 0.03,
@@ -31,16 +32,8 @@ Padding buildCar(int i, Size size, ThemeData themeData) {
             ),
             child: InkWell(
               onTap: () {
-                Get.to(DetailsPage(
-                  carImage: cars[i]['image'],
-                  carClass: cars[i]['class'],
-                  carName: cars[i]['name'],
-                  carPower: cars[i]['power'],
-                  people: cars[i]['people'],
-                  bags: cars[i]['bags'],
-                  carPrice: cars[i]['price'],
-                  carRating: cars[i]['rating'],
-                  isRotated: cars[i]['isRotated'],
+                Get.to(() => DetailsPage(
+                  car: carData,
                 ));
               },
               child: Column(
@@ -52,23 +45,12 @@ Padding buildCar(int i, Size size, ThemeData themeData) {
                     ),
                     child: Align(
                       alignment: Alignment.topCenter,
-                      child: cars[i]['isRotated']
-                          ? Image.asset(
-                        cars[i]['image'],
-                        height: size.width * 0.25,
-                        width: size.width * 0.5,
-                        fit: BoxFit.contain,
-                      )
-                          : Transform(
-                        alignment: Alignment.center,
-                        transform: Matrix4.rotationY(pi),
-                        child: Image.asset(
-                          cars[i]['image'],
-                          height: size.width * 0.25,
-                          width: size.width * 0.5,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
+                      child:Image.network(
+                              carData.image,
+                              height: size.width * 0.25,
+                              width: size.width * 0.5,
+                              fit: BoxFit.contain,
+                            )
                     ),
                   ),
                   Padding(
@@ -76,7 +58,7 @@ Padding buildCar(int i, Size size, ThemeData themeData) {
                       top: size.height * 0.01,
                     ),
                     child: Text(
-                      cars[i]['class'],
+                      carData.carClass,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         color: themeData.secondaryHeaderColor,
@@ -86,7 +68,7 @@ Padding buildCar(int i, Size size, ThemeData themeData) {
                     ),
                   ),
                   Text(
-                    cars[i]['name'],
+                    carData.name,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
                       color: themeData.secondaryHeaderColor,
@@ -97,7 +79,7 @@ Padding buildCar(int i, Size size, ThemeData themeData) {
                   Row(
                     children: [
                       Text(
-                        '${cars[i]['price']}\$',
+                        '${carData.price}\$',
                         style: GoogleFonts.poppins(
                           color: themeData.secondaryHeaderColor,
                           fontSize: size.width * 0.06,

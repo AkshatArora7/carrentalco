@@ -1,33 +1,17 @@
+import 'dart:io';
 import 'dart:math';
 
+import 'package:carrentalco/Models/Car.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unicons/unicons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailsPage extends StatefulWidget {
-  final String carImage;
-  final String carClass;
-  final String carName;
-  final int carPower;
-  final String people;
-  final String bags;
-  final int carPrice;
-  final String carRating;
-  final bool isRotated;
+  final Car car;
 
-  const DetailsPage({
-    Key? key,
-    required this.carImage,
-    required this.carClass,
-    required this.carName,
-    required this.carPower,
-    required this.people,
-    required this.bags,
-    required this.carPrice,
-    required this.carRating,
-    required this.isRotated,
-  }) : super(key: key);
+  const DetailsPage({Key? key, required this.car}) : super(key: key);
 
   @override
   _DetailsPageState createState() => _DetailsPageState();
@@ -76,13 +60,14 @@ class _DetailsPageState extends State<DetailsPage> {
           automaticallyImplyLeading: false,
           titleSpacing: 0,
           leadingWidth: size.width * 0.15,
-          title: Image.asset(
-            themeData.brightness == Brightness.dark
-                ? 'assets/icons/SobGOGlight.png'
-                : 'assets/icons/SobGOGdark.png',
-            height: size.height * 0.06,
-            width: size.width * 0.35,
-          ),
+          title: const Text("CAR RENTALCO"),
+          // Image.asset(
+          //   themeData.brightness == Brightness.dark
+          //       ? 'assets/icons/SobGOGlight.png'
+          //       : 'assets/icons/SobGOGdark.png',
+          //   height: size.height * 0.06,
+          //   width: size.width * 0.35,
+          // ),
           centerTitle: true,
         ),
       ),
@@ -105,29 +90,18 @@ class _DetailsPageState extends State<DetailsPage> {
                   ListView(
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      widget.isRotated
-                          ? Image.asset(
-                        widget.carImage,
+                      Image.network(
+                        widget.car.image,
                         height: size.width * 0.5,
                         width: size.width * 0.8,
                         fit: BoxFit.contain,
-                      )
-                          : Transform(
-                        alignment: Alignment.center,
-                        transform: Matrix4.rotationY(pi),
-                        child: Image.asset(
-                          widget.carImage,
-                          height: size.width * 0.5,
-                          width: size.width * 0.8,
-                          fit: BoxFit.contain,
-                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.carClass,
+                            widget.car.carClass,
                             textAlign: TextAlign.center,
                             style: GoogleFonts.poppins(
                               color: themeData.primaryColor,
@@ -135,27 +109,27 @@ class _DetailsPageState extends State<DetailsPage> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const Spacer(),
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow[800],
-                            size: size.width * 0.06,
-                          ),
-                          Text(
-                            widget.carRating,
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              color: Colors.yellow[800],
-                              fontSize: size.width * 0.04,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          // const Spacer(),
+                          // Icon(
+                          //   Icons.star,
+                          //   color: Colors.yellow[800],
+                          //   size: size.width * 0.06,
+                          // ),
+                          // Text(
+                          //   widget.carRating,
+                          //   textAlign: TextAlign.center,
+                          //   style: GoogleFonts.poppins(
+                          //     color: Colors.yellow[800],
+                          //     fontSize: size.width * 0.04,
+                          //     fontWeight: FontWeight.bold,
+                          //   ),
+                          // ),
                         ],
                       ),
                       Row(
                         children: [
                           Text(
-                            widget.carName,
+                            widget.car.name,
                             textAlign: TextAlign.left,
                             style: GoogleFonts.poppins(
                               color: themeData.primaryColor,
@@ -165,7 +139,7 @@ class _DetailsPageState extends State<DetailsPage> {
                           ),
                           const Spacer(),
                           Text(
-                            '${widget.carPrice}\$',
+                            '${widget.car.price}\$',
                             style: GoogleFonts.poppins(
                               color: themeData.primaryColor,
                               fontSize: size.width * 0.04,
@@ -191,7 +165,7 @@ class _DetailsPageState extends State<DetailsPage> {
                           children: [
                             buildStat(
                               UniconsLine.dashboard,
-                              '${widget.carPower} KM',
+                              '${widget.car.power} KM',
                               'Power',
                               size,
                               themeData,
@@ -199,14 +173,14 @@ class _DetailsPageState extends State<DetailsPage> {
                             buildStat(
                               UniconsLine.users_alt,
                               'People',
-                              '( ${widget.people} )',
+                              '( ${widget.car.people} )',
                               size,
                               themeData,
                             ),
                             buildStat(
                               UniconsLine.briefcase,
                               'Bags',
-                              '( ${widget.bags} )',
+                              '( ${widget.car.bags} )',
                               size,
                               themeData,
                             ),
@@ -218,7 +192,7 @@ class _DetailsPageState extends State<DetailsPage> {
                           vertical: size.height * 0.03,
                         ),
                         child: Text(
-                          'Select Location',
+                          'Location',
                           style: GoogleFonts.poppins(
                             color: themeData.primaryColor,
                             fontSize: size.width * 0.055,
@@ -248,7 +222,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                   ),
                                   child: Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Icon(
                                         UniconsLine.map_marker,
@@ -256,7 +230,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                         size: size.height * 0.05,
                                       ),
                                       Text(
-                                        'Katowice Airport',
+                                        widget.car.place,
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.poppins(
                                           color: themeData.primaryColor,
@@ -265,7 +239,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                         ),
                                       ),
                                       Text(
-                                        'Wolności 90, 42-625 Pyrzowice',
+                                        widget.car.location,
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.poppins(
                                           color: themeData.primaryColor
@@ -288,13 +262,18 @@ class _DetailsPageState extends State<DetailsPage> {
                                       ),
                                     ),
                                     child: Align(
-                                      child: Text(
-                                        'Map Preview',
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.poppins(
-                                          color: Colors.white,
-                                          fontSize: size.width * 0.04,
-                                          fontWeight: FontWeight.bold,
+                                      child: GestureDetector(
+                                        onTap: (){
+                                          openMapWithQuery(widget.car.location);
+                                        },
+                                        child: Text(
+                                          'Map Preview',
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.poppins(
+                                            color: Colors.white,
+                                            fontSize: size.width * 0.04,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -315,15 +294,58 @@ class _DetailsPageState extends State<DetailsPage> {
         ),
       ),
     );
+
+
+  }
+
+  Future<void> openMapWithQuery(String query) async {
+    // Construct the URL scheme for opening the map application and searching for the given query
+    final url = 'https://www.google.com/maps/search/?api=1&query=$query';
+
+    // Check if the device is iOS
+    if (Platform.isIOS) {
+      // Construct the URL scheme for opening Apple Maps
+      final appleMapsUrl = 'https://maps.apple.com/?q=$query';
+
+      // Launch Apple Maps if available
+      if (await canLaunch(appleMapsUrl)) {
+        await launch(appleMapsUrl);
+        return;
+      }
+    }
+
+    // If the device is not iOS or Apple Maps is not available, launch Google Maps
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      // If the URL scheme is not supported, show an error message
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Could not open map application.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   Padding buildStat(
-      IconData icon,
-      String title,
-      String desc,
-      Size size,
-      ThemeData themeData,
-      ) {
+    IconData icon,
+    String title,
+    String desc,
+    Size size,
+    ThemeData themeData,
+  ) {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: size.width * 0.015,
@@ -416,4 +438,5 @@ Align buildSelectButton(Size size) {
       ),
     ),
   );
+
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carrentalco/Data/firebase_functions.dart';
 import 'package:carrentalco/Models/Car.dart';
 import 'package:flutter/material.dart';
@@ -91,11 +92,14 @@ class _DetailsPageState extends State<DetailsPage> {
                   ListView(
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      Image.network(
-                        widget.car.image,
+                      CachedNetworkImage(
+                        imageUrl: widget.car.image,
                         height: size.width * 0.5,
                         width: size.width * 0.8,
                         fit: BoxFit.contain,
+                        placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,

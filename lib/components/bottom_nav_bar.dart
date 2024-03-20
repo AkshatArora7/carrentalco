@@ -18,6 +18,9 @@ Widget buildBottomNavBar(int currIndex, Size size, ThemeData themeData) {
     unselectedItemColor: const Color(0xff3b22a1),
     onTap: (value) {
       if (value != currIndex) {
+        if (value == 0) {
+          Get.offNamed('/search');
+        }
         if (value == 1) {
           Get.offNamed('/home');
         }else if (value == 2) {
@@ -29,7 +32,7 @@ Widget buildBottomNavBar(int currIndex, Size size, ThemeData themeData) {
     },
     items: [
       buildBottomNavItem(
-        UniconsLine.envelope,
+        UniconsLine.search,
         themeData,
         size,
       ),

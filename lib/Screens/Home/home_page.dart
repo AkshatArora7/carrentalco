@@ -1,4 +1,5 @@
 import 'package:carrentalco/components/bottom_nav_bar.dart';
+import 'package:get/get.dart';
 
 import './components/most_rented.dart';
 import './components/top_brands.dart';
@@ -54,30 +55,6 @@ class _HomePageState extends State<HomePage> {
           leadingWidth: size.width * 0.15,
           title: const Text("CAR RENTALCO"),
           centerTitle: true,
-          actions: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(
-                right: size.width * 0.05,
-              ),
-              child: SizedBox(
-                height: size.width * 0.1,
-                width: size.width * 0.1,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: themeData.backgroundColor.withOpacity(0.03),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                  child: Icon(
-                    UniconsLine.search,
-                    color: themeData.secondaryHeaderColor,
-                    size: size.height * 0.025,
-                  ),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
       extendBody: true,
@@ -121,6 +98,7 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: EdgeInsets.only(
                         top: size.height * 0.01,
+                        bottom: size.height * 0.04,
                       ),
                       child: Align(
                         child: Text(
@@ -133,62 +111,62 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: size.height * 0.03,
-                        left: size.width * 0.04,
-                        bottom: size.height * 0.025,
-                      ),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: size.width * 0.65,
-                            height: size.height * 0.06,
-                            child: TextField(
-                              //searchbar
-                              style: GoogleFonts.poppins(
-                                color: themeData.primaryColor,
-                              ),
-                              textInputAction: TextInputAction.next,
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(
-                                  top: size.height * 0.01,
-                                  left: size.width * 0.04,
-                                  right: size.width * 0.04,
-                                ),
-                                enabledBorder: textFieldBorder(),
-                                focusedBorder: textFieldBorder(),
-                                border: textFieldBorder(),
-                                hintStyle: GoogleFonts.poppins(
-                                  color: themeData.primaryColor,
-                                ),
-                                hintText: 'Search a car',
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              left: size.width * 0.025,
-                            ),
-                            child: Container(
-                              height: size.height * 0.06,
-                              width: size.width * 0.14,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                color: Color(0xff3b22a1), //filters bg color
-                              ),
-                              child: Icon(
-                                UniconsLine.sliders_v,
-                                color: Colors.white,
-                                size: size.height * 0.032,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: EdgeInsets.only(
+                    //     top: size.height * 0.03,
+                    //     left: size.width * 0.04,
+                    //     bottom: size.height * 0.025,
+                    //   ),
+                    //   child: Row(
+                    //     children: [
+                    //       SizedBox(
+                    //         width: size.width * 0.65,
+                    //         height: size.height * 0.06,
+                    //         child: TextField(
+                    //           //searchbar
+                    //           style: GoogleFonts.poppins(
+                    //             color: themeData.primaryColor,
+                    //           ),
+                    //           textInputAction: TextInputAction.next,
+                    //           decoration: InputDecoration(
+                    //             contentPadding: EdgeInsets.only(
+                    //               top: size.height * 0.01,
+                    //               left: size.width * 0.04,
+                    //               right: size.width * 0.04,
+                    //             ),
+                    //             enabledBorder: textFieldBorder(),
+                    //             focusedBorder: textFieldBorder(),
+                    //             border: textFieldBorder(),
+                    //             hintStyle: GoogleFonts.poppins(
+                    //               color: themeData.primaryColor,
+                    //             ),
+                    //             hintText: 'Search a car',
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Padding(
+                    //         padding: EdgeInsets.only(
+                    //           left: size.width * 0.025,
+                    //         ),
+                    //         child: Container(
+                    //           height: size.height * 0.06,
+                    //           width: size.width * 0.14,
+                    //           decoration: const BoxDecoration(
+                    //             borderRadius: BorderRadius.all(
+                    //               Radius.circular(10),
+                    //             ),
+                    //             color: Color(0xff3b22a1), //filters bg color
+                    //           ),
+                    //           child: Icon(
+                    //             UniconsLine.sliders_v,
+                    //             color: Colors.white,
+                    //             size: size.height * 0.032,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

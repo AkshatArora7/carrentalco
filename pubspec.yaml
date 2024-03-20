@@ -43,6 +43,7 @@ dependencies:
   firebase_core:
   firebase_auth: ^4.17.7
   url_launcher: ^6.2.5
+  cached_network_image: ^3.3.1
   cloud_firestore:
   google_sign_in:
   argon2:

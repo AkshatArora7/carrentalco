@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carrentalco/Models/Car.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -63,12 +64,15 @@ Widget buildDealerCars({required Car carData, required Size size, required Theme
                   ),
                   Align(
                     alignment: Alignment.topCenter,
-                    child: Image.network(
-                      carData.image,
+                    child: SizedBox(
                       height: size.width * 0.2,
                       width: size.width * 0.4,
-                      fit: BoxFit.cover,
-                    )
+                      child: CachedNetworkImage(
+                        imageUrl: carData.image,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                      ),
+                    ),
                   ),
                 ],
               ),

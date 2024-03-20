@@ -56,6 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         backgroundColor: themeData.backgroundColor,
         title: Text('Profile'),
+        leading: SizedBox(),
         actions: [
           IconButton(
             icon: Icon(Icons.logout),

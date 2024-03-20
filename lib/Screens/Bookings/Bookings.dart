@@ -53,119 +53,122 @@ class _BookingsState extends State<Bookings> {
       bottomNavigationBar: buildBottomNavBar(3, size, themeData),
       backgroundColor: themeData.backgroundColor,
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            Text(
-              'Your Bookings',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              SizedBox(height: 20),
+              Text(
+                'Your Bookings',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            // Stream builder to fetch booking data
-            StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('bookings')
-                  .where('userId',
-                      isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                }
+              SizedBox(height: 20),
+              // Stream builder to fetch booking data
+              StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('bookings')
+                    .where('userId',
+                        isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
 
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
 
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Text('No bookings found.');
-                }
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Text('No bookings found.');
+                  }
 
-                return Column(
-                  children: snapshot.data!.docs.map((document) {
-                    Map<String, dynamic> data =
-                        document.data() as Map<String, dynamic>;
-                    return FutureBuilder<DocumentSnapshot>(
-                      future: getCarDetails(data['carId']),
-                      builder: (context, carSnapshot) {
-                        if (carSnapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return CircularProgressIndicator();
-                        }
+                  return Column(
+                    children: snapshot.data!.docs.map((document) {
+                      Map<String, dynamic> data =
+                          document.data() as Map<String, dynamic>;
+                      return FutureBuilder<DocumentSnapshot>(
+                        future: getCarDetails(data['carId']),
+                        builder: (context, carSnapshot) {
+                          if (carSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          }
 
-                        if (carSnapshot.hasError) {
-                          return Text('Error: ${carSnapshot.error}');
-                        }
+                          if (carSnapshot.hasError) {
+                            return Text('Error: ${carSnapshot.error}');
+                          }
 
-                        if (!carSnapshot.hasData) {
-                          return Text('Car details not found.');
-                        }
+                          if (!carSnapshot.hasData) {
+                            return Text('Car details not found.');
+                          }
 
-                        Map<String, dynamic> carData =
-                            carSnapshot.data!.data() as Map<String, dynamic>;
+                          Map<String, dynamic> carData =
+                              carSnapshot.data!.data() as Map<String, dynamic>;
 
-                        return ListTile(
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 10.0),
-                          title: Text(
-                            'Car: ${carData['name']}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
+                          return ListTile(
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 10.0),
+                            title: Text(
+                              'Car: ${carData['name']}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              ),
                             ),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 5.0),
-                              Text(
-                                'Price: \$${carData['price']} per day',
-                                style: TextStyle(
-                                  fontSize: 16.0,
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 5.0),
+                                Text(
+                                  'Price: \$${carData['price']} per day',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 5.0),
-                              Text(
-                                'Booking Time: ${_formatDate(data['time'])}',
-                                style: TextStyle(
-                                  fontSize: 16.0,
+                                SizedBox(height: 5.0),
+                                Text(
+                                  'Booking Time: ${_formatDate(data['time'])}',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 5.0),
-                              Text(
-                                'Start Date: ${_formatDate(data['startDate'])}',
-                                style: TextStyle(
-                                  fontSize: 16.0,
+                                SizedBox(height: 5.0),
+                                Text(
+                                  'Start Date: ${_formatDate(data['startDate'])}',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 5.0),
-                              Text(
-                                'End Date: ${_formatDate(data['endDate'])}',
-                                style: TextStyle(
-                                  fontSize: 16.0,
+                                SizedBox(height: 5.0),
+                                Text(
+                                  'End Date: ${_formatDate(data['endDate'])}',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          trailing: data['status'] == "waiting"
-                              ? Icon(UniconsLine.clock, color: Colors.amber,)
-                              : data['status'] == "approved"
-                                  ? Icon(UniconsLine.thumbs_up, color: Colors.green,)
-                                  : Icon(UniconsLine.thumbs_down, color: Colors.red,),
-                          // onTap: () {
-                          //   // Add onTap functionality if needed
-                          // },
-                        );
-                      },
-                    );
-                  }).toList(),
-                );
-              },
-            ),
-          ],
+                              ],
+                            ),
+                            trailing: data['status'] == "waiting"
+                                ? Icon(UniconsLine.clock, color: Colors.amber,)
+                                : data['status'] == "approved"
+                                    ? Icon(UniconsLine.thumbs_up, color: Colors.green,)
+                                    : Icon(UniconsLine.thumbs_down, color: Colors.red,),
+                            // onTap: () {
+                            //   // Add onTap functionality if needed
+                            // },
+                          );
+                        },
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

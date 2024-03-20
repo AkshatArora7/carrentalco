@@ -7,6 +7,7 @@ import 'package:carrentalco/Screens/DealerDashboard/ViewCars/components/AddDeale
 import 'package:carrentalco/Screens/Home/home_page.dart';
 import 'package:carrentalco/Screens/Login/login_screen.dart';
 import 'package:carrentalco/Screens/Profile/profile_screen.dart';
+import 'package:carrentalco/Screens/Search/SearchScreen.dart';
 import 'package:carrentalco/Screens/Signup/signup_screen.dart';
 import 'package:carrentalco/Screens/Splash/Splash.dart';
 import 'package:carrentalco/Screens/Welcome/welcome_screen.dart';
@@ -26,4 +27,5 @@ final List<GetPage> routes = [
   GetPage(name: '/dealerCars', page: () => const ViewDealerCars()),
   GetPage(name: '/addDealerCars', page: () => const AddDealerCars()),
   GetPage(name: '/bookings', page: () => const Bookings()),
+  GetPage(name: '/search', page: () => const SearchScreen()),
 ];
